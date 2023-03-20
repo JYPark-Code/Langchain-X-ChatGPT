@@ -1,0 +1,141 @@
+/* Center the app container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: white;
+}
+
+/* Style the chat container */
+.chat-container {
+  width: 500px;
+  height: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the chat messages */
+.chat-message {
+  padding: 10px;
+}
+
+/* Style the user message */
+.user-message {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-message .message-text {
+  background-color: #007aff;
+  color: white;
+  border-radius: 20px;
+  padding: 10px;
+  margin-right: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.user-message .message-timestamp {
+  font-size: 12px;
+  color: #a6a6a6;
+  margin-right: 5px;
+}
+
+/* Style the bot message */
+.bot-message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bot-message .message-text {
+  background-color: white;
+  color: black;
+  border-radius: 20px;
+  padding: 10px;
+  margin-left: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.bot-message .message-timestamp {
+  font-size: 12px;
+  color: #a6a6a6;
+}
+
+/* Style the input form */
+.input-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e5e5e5;
+  padding: 10px;
+}
+
+.input-form input {
+  width: 400px;
+  border: 1px solid #e5e5e5;
+  outline: none;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.input-form button {
+  width: 20%;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  outline: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+.input-form button:hover {
+  background-color: #0051a3;
+}
+
+/* Style the attachment file input */
+.attachment-input {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 20px;
+  border: 2px solid #007aff;
+}
+
+.attachment-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+
+.attachment-input button {
+  background-color: transparent;
+  color: #007aff;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.attachment-input button:hover {
+  background-color: #007aff;
+  color: white;
+}
