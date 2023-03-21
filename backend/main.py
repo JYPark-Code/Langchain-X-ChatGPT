@@ -74,7 +74,7 @@ async def query(query: str):
         docs = docsearch.similarity_search(query_with_postfix, include_metadata=True)
         # llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
         # llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, max_tokens=1500, openai_api_key=OPENAI_API_KEY)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, max_tokens=500, openai_api_key=OPENAI_API_KEY)
         chain = load_qa_chain(llm, chain_type="stuff")
         response = chain.run(input_documents=docs, question=query_with_postfix)
         print(response)
