@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader
@@ -15,6 +16,15 @@ import pinecone
 
 
 app = FastAPI()
+
+# Add CORS support
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()  # load variables from .env file
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
