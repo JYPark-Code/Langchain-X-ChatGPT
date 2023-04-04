@@ -1,9 +1,12 @@
+import os
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-import os
+from langchain import OpenAI, VectorDBQA
 from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader
+from langchain.document_loaders.unstructured import UnstructuredFileLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma, Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 # from langchain.llms import OpenAI
@@ -65,20 +68,48 @@ async def add_docs(file: UploadFile = File(...)):
         return {"message": "Error adding documents"}
 
 
+@app.post("/add_txts/")
+async def add_txts(file: UploadFile = File(...)):
+    try:
+        with open(file.filename, "wb") as f:
+            f.write(file.file.read())
+        loader = UnstructuredFileLoader(file.filename)
+        documents = loader.load()
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        texts = text_splitter.split_documents(documents)
+        embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+        global docsearch
+        docsearch = Chroma.from_documents(texts, embeddings)
+        return {"message": "Text file added successfully!"}
+    except Exception as e:
+        print(str(e))
+        return {"message": "Error adding text file"}
+
+
 @app.post("/query/")
 async def query(query: str):
     try:
-        # postfix = "Answer in Korean"
-        query_with_postfix = query
-        # query_with_postfix = query + " " + postfix
-        docs = docsearch.similarity_search(query_with_postfix, include_metadata=True)
+        docs = docsearch.similarity_search(query, include_metadata=True)
         # llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-        # llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, max_tokens=500, openai_api_key=OPENAI_API_KEY)
         chain = load_qa_chain(llm, chain_type="stuff")
-        response = chain.run(input_documents=docs, question=query_with_postfix)
+        response = chain.run(input_documents=docs, question=query)
         print(response)
         return {"answer": str(response)}
+
+    except Exception as e:
+        print(str(e))
+        return {"message": "Error with query"}
+    
+
+@app.post("/query_txts/")
+async def query_txts(query: str):
+    try:
+        qa = VectorDBQA.from_chain_type(llm=OpenAI(temperature=0, max_tokens=500), chain_type="stuff", vectorstore=docsearch)
+        result = qa.run(query)
+        while result.startswith('\n'):
+            result = result[1:]
+        return {"answer": str(result)}
 
     except Exception as e:
         print(str(e))

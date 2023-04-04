@@ -17,12 +17,59 @@ function App() {
     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   }, [messages]);
 
+  // const handleFileUpload = async () => {
+  //   setIsLoading(true);
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   try {
+  //     await axios.post("http://localhost:8000/add_docs/", formData);
+  //     alert("Documents added successfully!");
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     alert("Error adding documents");
+  //   }
+  //   setIsLoading(false);
+  // };
+
+  // const handleMessageSubmit = async (event) => {
+  //   event.preventDefault();
+  //   if (!inputValue.trim() || isBotLoading) {
+  //     return;
+  //   }
+  //   setIsBotLoading(true);
+  //   const messageObject = {
+  //     text: inputValue.trim(),
+  //     sender: "user",
+  //     timestamp: new Date(),
+  //   };
+  //   setMessages((messages) => [...messages, messageObject]);
+  //   setInputValue("");
+  //   try {
+  //     const response = await axios.post(`http://localhost:8000/query/?query=${messageObject.text}`);
+  //     const botMessageObject = {
+  //       text: response.data.answer,
+  //       sender: "bot",
+  //       timestamp: new Date(),
+  //     };
+  //     setMessages((messages) => [...messages, botMessageObject]);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     alert("Error with query");
+  //   }
+  //   setIsBotLoading(false);
+  // };
+
   const handleFileUpload = async () => {
     setIsLoading(true);
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axios.post("http://localhost:8000/add_docs/", formData);
+      let response;
+      if (file.type === "application/pdf") {
+        response = await axios.post("http://localhost:8000/add_docs/", formData);
+      } else {
+        response = await axios.post("http://localhost:8000/add_txts/", formData);
+      }
       alert("Documents added successfully!");
     } catch (error) {
       console.error("Error:", error);
@@ -30,7 +77,7 @@ function App() {
     }
     setIsLoading(false);
   };
-
+  
   const handleMessageSubmit = async (event) => {
     event.preventDefault();
     if (!inputValue.trim() || isBotLoading) {
@@ -41,11 +88,17 @@ function App() {
       text: inputValue.trim(),
       sender: "user",
       timestamp: new Date(),
+      fileType: file.type === "application/pdf" ? "pdf" : "text", // Add file type flag
     };
     setMessages((messages) => [...messages, messageObject]);
     setInputValue("");
     try {
-      const response = await axios.post(`http://localhost:8000/query/?query=${messageObject.text}`);
+      let response;
+      if (messageObject.fileType === "pdf") {
+        response = await axios.post(`http://localhost:8000/query/?query=${messageObject.text}`);
+      } else {
+        response = await axios.post(`http://localhost:8000/query_txts/?query=${messageObject.text}`);
+      }
       const botMessageObject = {
         text: response.data.answer,
         sender: "bot",
@@ -58,7 +111,7 @@ function App() {
     }
     setIsBotLoading(false);
   };
-
+  
   return (
     <div className="app-container">
       <h1>LangChain & ChatGPT</h1>

@@ -45,6 +45,7 @@
   font-size: 12px;
   color: #a6a6a6;
   margin-right: 5px;
+  margin-left: 5px;
 }
 
 /* Style the bot message */
@@ -175,6 +176,7 @@
   display: flex;
   align-items: center;
   margin-right: 5px;
+  margin-left: 5px;
 }
 
 .bot-typing-animation span {
@@ -184,6 +186,7 @@
   border-radius: 50%;
   background-color: #007aff;
   margin-right: 5px;
+  margin-left: 5px;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;

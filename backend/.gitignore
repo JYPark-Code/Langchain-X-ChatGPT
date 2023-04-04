@@ -1,6 +1,13 @@
 # Tesseact
 tesseract
 
+#.Chroma
+.chroma
+
+# Input Data
+*.pdf
+*.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
